@@ -1,0 +1,20 @@
+* {
+    font-family: 'La Belle Aurore', cursive;
+    font-family: 'Libre Baskerville', serif;
+    /*background-image: url(./golden-gate-bridge-fog-san-francisco-early-morning.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;*/
+    background-color: #F3EFE0;
+    justify-content: center;
+    text-align: center;
+    color: #222222;
+}
+.btn {
+    margin: 5px;
+}
+h1 {
+    margin-top: 15px;
+}
+
+
