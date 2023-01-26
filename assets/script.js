@@ -17,7 +17,7 @@ function handleSubmission(event) {
   })
     .then(Response => Response.json())
     .then(data => {
-      console.log(data.main[0].weather);
+      console.log(data.main[0].weather[0]);
       
     })
   .catch(error => console.log(error));
