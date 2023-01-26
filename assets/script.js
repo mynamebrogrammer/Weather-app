@@ -11,7 +11,7 @@ function handleSubmission(event) {
   fetch(apiUrl + city + "&appid=" + key)
     .then(Response => Response.json())
     .then(data => {
-      console.log(data)
+      console.log(data.results[0].weather);
     })
   .catch(error => console.log(error));
   
