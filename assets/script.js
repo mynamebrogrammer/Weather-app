@@ -6,12 +6,19 @@ function handleSubmission(event) {
 
 
   var city = document.getElementById("input-group").value;
+  console.log(city);
 
 
-  fetch(apiUrl + city + "&appid=" + key)
+  fetch(apiUrl + city + "&appid=" + key , {
+    headers: {
+      "content-type": "application/json"
+    },
+    mode: 'no-cors'
+  })
     .then(Response => Response.json())
     .then(data => {
-      console.log(data.results[0].weather);
+      console.log(data.main[0].weather);
+      
     })
   .catch(error => console.log(error));
   
