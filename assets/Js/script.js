@@ -22,12 +22,12 @@ function handleSubmission(event) {
       console.log(data.list[0].wind.speed);
       console.log(data.list[0].main.temp);
 
-      var temp = data.list[0].main.temp.toFixed(2) - 273.15;
-      console.log(temp + "°C");
-      var humidity = data.list[0].main.humidity;
-      console.log(humidity + "%");
-      var windSpeed = data.list[0].wind.speed;
-      console.log(windSpeed + "km/h");
+      var Temperature = data.list[0].main.temp.toFixed(2) - 273.15;
+      console.log(Temperature + "°C");
+      var humidityMain = data.list[0].main.humidity;
+      console.log(humidityMain + "%");
+      var windSpeedMain = data.list[0].wind.speed;
+      console.log(windSpeedMain + "km/h");
 
       for (var i = 0; i < data.list.length; i++) {
         var forecast = data.list[i];
@@ -36,12 +36,13 @@ function handleSubmission(event) {
           console.log("Date: " + date);
           console.log("Weather: " + forecast.weather[0].main);
           console.log("Icon: " + forecast.weather[0].icon);
-          console.log("Temperature: " + forecast.main.temp);
-          console.log("Wind Speed: " + forecast.wind.speed);
-          console.log("Humidity: " + forecast.main.humidity);
+          console.log("Temperature: " + Temperature);
+          console.log("Wind Speed: " + windSpeedMain);
+          console.log("Humidity: " + humidityMain);
         }
       }
 
+      displayResults(data);
       saveHistory();
     })
     .catch(function (err) {
@@ -54,5 +55,36 @@ function saveHistory() {
   searchHistory.push(city);
   localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
   console.log(searchHistory);
+}
+
+function displayResults(data) {
+  for (let i = 0; i < data.list.length; i++) {
+    var forecast = data.list[i];
+    var date = new Date(forecast.dt * 1000);
+    if (date.getUTCHours() === 12) {
+      var card = document.createElement("div");
+      card.classList.add("card");
+
+      var dateEL = document.createElement("div");
+      dateEL.innerText = date;
+      
+      var temp = document.createElement("p");
+      temp.innerText = "Temperature: " + (forecast.main.temp - 273.15).toFixed(1) + "°C";
+
+      var humidity = document.createElement("p");
+      humidity.innerText = "Humidity: " + forecast.main.humidity + "%";
+
+      var windSpeed = document.createElement("p");
+      windSpeed.innerText = "Wind Speed: " + forecast.wind.speed + "km/h";
+
+      card.appendChild(dateEL);
+      card.appendChild(temp);
+      card.appendChild(humidity);
+      card.appendChild(windSpeed);
+
+      var forecastSection = document.getElementById("forecast-section");
+      forecastSection.appendChild(card);
+    }
+  }
 }
 document.addEventListener("submit", handleSubmission);
