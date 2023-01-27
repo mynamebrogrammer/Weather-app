@@ -30,8 +30,8 @@ function handleSubmission(event) {
       console.log(windSpeed + "km/h");
 
       for (var i = 0; i < data.list.length; i++) {
-        let forecast = data.list[i];
-        let date = new Date(forecast.dt * 1000);
+        var forecast = data.list[i];
+        var date = new Date(forecast.dt * 1000);
         if (date.getUTCHours() === 12) {
           console.log("Date: " + date);
           console.log("Weather: " + forecast.weather[0].main);
