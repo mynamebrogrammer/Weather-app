@@ -32,8 +32,9 @@ function handleSubmission(event) {
       for (var i = 0; i < data.list.length; i++) {
         var forecast = data.list[i];
         var date = new Date(forecast.dt * 1000);
+        var cardContEl = document.createElement("div");
         if (date.getUTCHours() === 12) {
-          console.log("Date: " + date);
+          console.log("Date: " + currentDate);
           console.log("Weather: " + forecast.weather[0].main);
           console.log("Icon: " + forecast.weather[0].icon);
           console.log("Temperature: " + Temperature);
@@ -43,6 +44,7 @@ function handleSubmission(event) {
       }
 
       displayResults(data);
+      GenerateCards();
       saveHistory();
     })
     .catch(function (err) {
@@ -57,6 +59,42 @@ function saveHistory() {
   console.log(searchHistory);
 }
 
+function GenerateCards(data) {
+  var cardContEl = document.getElementById("forecast-section");
+  for (let i = 0; i < data.list.length; i++) {
+    var forecast = data.list[i];
+    var date = new Date(forecast.dt * 1000);
+
+    if (date.getUTCHours() === 12) {
+      var card = document.createElement("div");
+      card.classList.add("card");
+
+      cardContEl.class = "card-group";
+
+
+      var dateEL = document.createElement("div");
+      dateEL.innerText = date;
+
+      var temp = document.createElement("p");
+      temp.innerText = "Temperature: " + (forecast.main.temp - 273.15).toFixed(1) + "°C";
+
+      var humidity = document.createElement("p");
+      humidity.innerText = "Humidity: " + forecast.main.humidity + "%";
+
+      var windSpeed = document.createElement("p");
+      windSpeed.innerText = "Wind Speed: " + forecast.wind.speed + "km/h";
+
+      card.appendChild(dateEL);
+      card.appendChild(temp);
+      card.appendChild(humidity);
+      card.appendChild(windSpeed);
+
+      var forecastSection = document.getElementById("forecast-section");
+      forecastSection.appendChild(card);
+    }
+  }
+
+}
 function displayResults(data) {
   for (let i = 0; i < data.list.length; i++) {
     var forecast = data.list[i];
@@ -67,7 +105,7 @@ function displayResults(data) {
 
       var dateEL = document.createElement("div");
       dateEL.innerText = date;
-      
+
       var temp = document.createElement("p");
       temp.innerText = "Temperature: " + (forecast.main.temp - 273.15).toFixed(1) + "°C";
 
