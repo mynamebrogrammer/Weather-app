@@ -5,52 +5,23 @@ var city;
 function handleSubmission(event) {
   event.preventDefault();
 
-
   city = document.getElementById("input-group").value;
-  console.log(city);
-
-  var currentDate;
-  currentDate = dayjs().format('ddd D, YYYY');
-  console.log(currentDate);
 
   fetch(apiUrl + city + "&appid=" + key, { mode: 'cors' })
     .then(function (res) {
       return res.json();
     })
     .then(function (data) {
-      console.log(data.list[0].weather[0].main);
-      console.log(data.list[0].wind.speed);
-      console.log(data.list[0].main.temp);
-
-      var Temperature = data.list[0].main.temp.toFixed(2) - 273.15;
-      console.log(Temperature + "°C");
-      var humidityMain = data.list[0].main.humidity;
-      console.log(humidityMain + "%");
-      var windSpeedMain = data.list[0].wind.speed;
-      console.log(windSpeedMain + "km/h");
-
-      for (var i = 0; i < data.list.length; i++) {
-        var forecast = data.list[i];
-        var date = new Date(forecast.dt * 1000);
-        var cardContEl = document.createElement("div");
-        if (date.getUTCHours() === 12) {
-          console.log("Date: " + currentDate);
-          console.log("Weather: " + forecast.weather[0].main);
-          console.log("Icon: " + forecast.weather[0].icon);
-          console.log("Temperature: " + Temperature);
-          console.log("Wind Speed: " + windSpeedMain);
-          console.log("Humidity: " + humidityMain);
-        }
-      }
-
-      displayResults(data);
-      GenerateCards();
+      var forecastSection = document.getElementById("forecast-section");
+      forecastSection.innerHTML = '';
+      GenerateCards(data);
       saveHistory();
     })
     .catch(function (err) {
       console.error(err);
     });
 }
+
 
 function saveHistory() {
   var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
@@ -60,20 +31,21 @@ function saveHistory() {
 }
 
 function GenerateCards(data) {
+  var cardDeck = document.createElement("div");
+  cardDeck.classList.add("card-deck");
   var cardContEl = document.getElementById("forecast-section");
+  cardContEl.classList.add("d-flex", "flex-wrap");
+
   for (let i = 0; i < data.list.length; i++) {
     var forecast = data.list[i];
     var date = new Date(forecast.dt * 1000);
 
     if (date.getUTCHours() === 12) {
       var card = document.createElement("div");
-      card.classList.add("card");
-
-      cardContEl.class = "card-group";
-
+      card.classList.add("card", "m-3");
 
       var dateEL = document.createElement("div");
-      dateEL.innerText = date;
+      dateEL.innerText = date.toDateString();
 
       var temp = document.createElement("p");
       temp.innerText = "Temperature: " + (forecast.main.temp - 273.15).toFixed(1) + "°C";
@@ -89,40 +61,31 @@ function GenerateCards(data) {
       card.appendChild(humidity);
       card.appendChild(windSpeed);
 
-      var forecastSection = document.getElementById("forecast-section");
-      forecastSection.appendChild(card);
+      cardContEl.appendChild(card);
+      cardDeck.appendChild(card);
     }
   }
-
+  cardContEl.appendChild(cardDeck);
 }
-function displayResults(data) {
-  for (let i = 0; i < data.list.length; i++) {
-    var forecast = data.list[i];
-    var date = new Date(forecast.dt * 1000);
-    if (date.getUTCHours() === 12) {
-      var card = document.createElement("div");
-      card.classList.add("card");
 
-      var dateEL = document.createElement("div");
-      dateEL.innerText = date;
+var form = document.querySelector('#weather-form');
+var cityInput = document.querySelector('#input-group');
+var forecastSection = document.querySelector('#forecast-section');
+var clearButton = document.createElement('button');
 
-      var temp = document.createElement("p");
-      temp.innerText = "Temperature: " + (forecast.main.temp - 273.15).toFixed(1) + "°C";
+clearButton.innerHTML = 'Clear';
+clearButton.classList.add('btn', 'btn-secondary', 'btn-lg');
 
-      var humidity = document.createElement("p");
-      humidity.innerText = "Humidity: " + forecast.main.humidity + "%";
+form.addEventListener('submit', async event => {
+  event.preventDefault();
 
-      var windSpeed = document.createElement("p");
-      windSpeed.innerText = "Wind Speed: " + forecast.wind.speed + "km/h";
+  form.appendChild(clearButton);
+});
 
-      card.appendChild(dateEL);
-      card.appendChild(temp);
-      card.appendChild(humidity);
-      card.appendChild(windSpeed);
-
-      var forecastSection = document.getElementById("forecast-section");
-      forecastSection.appendChild(card);
-    }
-  }
-}
+clearButton.addEventListener('click', event => {
+  localStorage.removeItem('city');
+  forecastSection.innerHTML = '';
+  clearButton.remove();
+});
 document.addEventListener("submit", handleSubmission);
+
