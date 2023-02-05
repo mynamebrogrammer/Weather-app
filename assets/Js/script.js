@@ -27,6 +27,7 @@ function saveHistory() {
   var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
   searchHistory.push(city);
   localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+  
   console.log(searchHistory);
 }
 
@@ -42,7 +43,7 @@ function GenerateCards(data) {
 
     if (date.getUTCHours() === 12) {
       var card = document.createElement("div");
-      card.classList.add("card", "m-3");
+      card.classList.add("card");
 
       var dateEL = document.createElement("div");
       dateEL.innerText = date.toDateString();
