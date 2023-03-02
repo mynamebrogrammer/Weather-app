@@ -27,15 +27,62 @@ function saveHistory() {
   var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
   searchHistory.push(city);
   localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-  
-  console.log(searchHistory);
+
+  var searchHistoryEl = document.getElementById("history");
+  searchHistoryEl.innerHTML = '';
+
+  for (var i = 0; i < searchHistory.length; i++) {
+    var historyCity = searchHistory[i];
+    var historyCityEl = document.createElement("div");
+    historyCityEl.innerText = historyCity;
+    historyCityEl.classList.add("history-city");
+
+    historyCityEl.addEventListener("click", function () {
+      handleSubmission({
+        preventDefault: function () { }
+      }, historyCity);
+    });
+
+    searchHistoryEl.appendChild(historyCityEl);
+  }
+
+  console.log(searchHistory);;
 }
 
 function GenerateCards(data) {
   var cardDeck = document.createElement("div");
   cardDeck.classList.add("card-deck");
+
+
   var cardContEl = document.getElementById("forecast-section");
   cardContEl.classList.add("d-flex", "flex-wrap");
+
+  var currentDate = new Date();
+  var currentDateEl = document.createElement("div");
+  currentDateEl.innerText = currentDate.toDateString();
+
+
+
+  var card = document.createElement("div");
+  card.classList.add("card");
+
+  var temp = document.createElement("p");
+  temp.innerText = "Temperature: " + (data.list[0].main.temp - 273.15).toFixed(1) + "°C";
+
+  var humidity = document.createElement("p");
+  humidity.innerText = "Humidity: " + data.list[0].main.humidity + "%";
+
+  var windSpeed = document.createElement("p");
+  windSpeed.innerText = "Wind Speed: " + data.list[0].wind.speed + " km/h";
+
+
+  card.append(dateEL);
+  card.append(temp);
+  card.append(humidity);
+  card.append(windSpeed);
+
+  cardContEl.append(card);
+  cardDeck.append(card);
 
   for (let i = 0; i < data.list.length; i++) {
     var forecast = data.list[i];
