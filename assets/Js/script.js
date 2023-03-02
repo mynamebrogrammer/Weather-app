@@ -2,8 +2,13 @@ var key = "e065fc7e9b81d8076cdf23e93941524d";
 var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?q=";
 var city;
 
-function handleSubmission(event) {
+function handleSubmission(event, city = null) {
   event.preventDefault();
+  
+  if (city !== null) {
+    document.getElementById("input-group").value=city;
+  }
+
 
   city = document.getElementById("input-group").value;
 
@@ -26,10 +31,39 @@ function handleSubmission(event) {
 function saveHistory() {
   var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
   searchHistory.push(city);
+
+
+  if (searchHistory.length > 5) {
+    searchHistory.shift();
+  }
+
   localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 
   var searchHistoryEl = document.getElementById("history");
   searchHistoryEl.innerHTML = '';
+
+  for (var i = searchHistory.length - 1; i >= 0; i--) {
+    var historyCity = searchHistory[i];
+    var historyCityEl = document.createElement("div");
+    historyCityEl.innerText = historyCity;
+    historyCityEl.classList.add("history-city");
+
+    historyCityEl.setAttribute("id", "history-city");
+    historyCityEl.addEventListener("click", function () {
+      handleSubmission(event, this.id);
+    });
+
+    searchHistoryEl.appendChild(historyCityEl);
+
+    historyCityEl.addEventListener("click", function () {
+      handleSubmission({
+        preventDefault: function () { }
+      }, historyCity);
+    });
+
+    searchHistoryEl.appendChild(historyCityEl);
+  }
+
 
   for (var i = 0; i < searchHistory.length; i++) {
     var historyCity = searchHistory[i];
@@ -52,8 +86,6 @@ function saveHistory() {
 function GenerateCards(data) {
   var cardDeck = document.createElement("div");
   cardDeck.classList.add("card-deck");
-
-
   var cardContEl = document.getElementById("forecast-section");
   cardContEl.classList.add("d-flex", "flex-wrap");
 
@@ -120,6 +152,7 @@ var form = document.querySelector('#weather-form');
 var cityInput = document.querySelector('#input-group');
 var forecastSection = document.querySelector('#forecast-section');
 var clearButton = document.createElement('button');
+
 
 clearButton.innerHTML = 'Clear';
 clearButton.classList.add('btn', 'btn-secondary', 'btn-lg');
