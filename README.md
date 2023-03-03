@@ -43,6 +43,11 @@ This program is a weather dashboard that will run in the browser and feature dyn
 
 [WeatherApp](https://mynamebrogrammer.github.io/Weather-app/)
 
+![image](https://user-images.githubusercontent.com/79487250/222614980-9c05e92e-1d7b-4b40-bcee-b5cfe6563a92.png)
+
+![image](https://user-images.githubusercontent.com/79487250/222615228-55c39eb1-d7d7-48a7-bc61-9b11d24510e7.png)
+
+
 
 ## License
 
