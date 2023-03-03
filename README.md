@@ -41,7 +41,7 @@ This program is a weather dashboard that will run in the browser and feature dyn
 
 ## Demo
 
-[WeatherApp](https://github.com/mynamebrogrammer/WeatherApp)
+[WeatherApp](https://mynamebrogrammer.github.io/Weather-app/)
 
 
 ## License
